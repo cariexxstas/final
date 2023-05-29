@@ -26,7 +26,7 @@ img_enemy = "carwar.png"  # ворог
 
 score = 0  # збито кораблів
 goal = 10 # стільки кораблів потрібно збити для перемоги
-lost = 0  # пропущено кораблів
+lost = 30  # пропущено кораблів
 max_lost = 3 # програли, якщо пропустили стільки
 life = 3  # очки життя
 
@@ -61,8 +61,11 @@ class Player(GameSprite):
             self.rect.x -= self.speed
         if keys[K_RIGHT] and self.rect.x < win_width - 80:
             self.rect.x += self.speed
- 
-    # метод "постріл" (використовуємо місце гравця, щоб створити там кулю)
+        if keys[K_UP] and self.rect.y > 20:
+            self.rect.y -= self.speed
+        if keys[K_DOWN] and self.rect.y < win_height - 80:
+            self.rect.y += self.speed
+                # метод "постріл" (використовуємо місце гравця, щоб створити там кулю)
 
  
 # клас спрайта-ворога
@@ -75,6 +78,7 @@ class Enemy(GameSprite):
         if self.rect.y > win_height:
             self.rect.x = randint(80, win_width - 80)
             self.rect.y = 0
+            lost-=1
            
 
 
@@ -158,13 +162,13 @@ while run:
 
 
         #програш
-        if life == 0 or lost >= max_lost:
+        if life == 0:
             finish = True # проиграли, ставим фон и больше не управляем спрайтами.
             window.blit(lose, (200, 200))
 
 
         # перевірка виграшу: скільки очок набрали?
-        if score >= goal:
+        if lost <= 0:
             finish = True
             window.blit(win, (200, 200))
 
@@ -196,9 +200,10 @@ while run:
 
     #бонус: автоматичний перезапуск гри
     else:
+        mixer.music.play()
         finish = False
         score = 0
-        lost = 0
+        lost = 30
         num_fire = 0
         life = 3
         for m in monsters:
