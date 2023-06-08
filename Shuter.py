@@ -76,7 +76,7 @@ class Enemy(GameSprite):
         global lost
         # зникає, якщо дійде до краю екрана
         if self.rect.y > win_height:
-            self.rect.x = randint(80, win_width - 80)
+            self.rect.x = randint(0, win_width)
             self.rect.y = 0
             lost-=1
            
@@ -100,7 +100,7 @@ ship = Player(img_hero, 5, win_height - 100, 50, 100, 10)
 monsters = sprite.Group()
 for i in range(5, 10):
     monster = Enemy(img_enemy, randint(
-        80, win_width - 80), -40, 80, 50, randint(14, 15))
+        0, win_width), -40, 80, 50, randint(15, 20))
     monsters.add(monster)
 
 
@@ -121,7 +121,7 @@ rel_time = False  # прапор, що відповідає за перезар�
 
 
 num_fire = 0  # змінна для підрахунку пострілів    
-
+by = 0
 
 while run:
     # подія натискання на кнопку Закрити
@@ -134,7 +134,8 @@ while run:
     # сама гра: дії спрайтів, перевірка правил гри, перемальовка
     if not finish:
         # оновлюємо фон
-        window.blit(background, (0, 0))
+        window.blit(background, (0, by))
+        window.blit(background,(0, by-500))
 
 
         # рухи спрайтів
@@ -156,7 +157,7 @@ while run:
             sprite.spritecollide(ship, monsters, True)
            
             for i in range(1):
-                monster = Enemy(img_enemy, randint(80, win_width - 80), -40, 80, 50, randint(1, 5))
+                monster = Enemy(img_enemy, randint(0, win_width), -40, 80, 50, randint(1, 5))
                 monsters.add(monster)
             life = life -1
 
@@ -189,7 +190,9 @@ while run:
         if life == 1:
             life_color = (150, 0, 0)
 
-
+        by += 5
+        if by == 500:
+            by = 0
        
         text_life = font1.render(str(life), 1, life_color)
         window.blit(text_life, (650, 10))
@@ -212,7 +215,7 @@ while run:
      
         time.delay(3000)
         for i in range(5, 10):
-            monster = Enemy(img_enemy, randint(80, win_width - 80), -40, 80, 50, randint(14, 15))
+            monster = Enemy(img_enemy, randint(0, win_width ), -40, 80, 50, randint(15, 20))
             monsters.add(monster) 
 
 
